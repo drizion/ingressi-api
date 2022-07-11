@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express()
+const db = require('./database/connect')
+
 
 const register = require('./routes/register')
 const authenticate = require('./routes/authenticate')
