@@ -1,19 +1,16 @@
 const express = require('express');
 const app = express()
-const db = require('./database/connect')
 
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
 
-const register = require('./routes/register')
-const authenticate = require('./routes/authenticate')
-const validate = require('./routes/validate')
-
-app.use('/', register, authenticate, validate)
+require('./database/controllers/authController')(app)
 
 app.get('/', (req,res) => {
     res.status(200).json({msg: 'ok'})
 })
 
-const port = 3456
+const port = 6487
 app.listen(port, () => {
     console.log('server started at port '+ port)
 })

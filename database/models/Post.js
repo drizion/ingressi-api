@@ -1,12 +1,14 @@
-const mongoose = require('mongoose')
+const mongoose = require('../index')
 
-const postModel = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
     titulo: String,
     conteudo: String,
     autor: String,
-    data: Date,
-    ultimaEdicao: Date,
+    data: { type: Date, default: Date.now },
+    ultimaEdicao: { type: Date, default: Date.now },
     mostrarPara: [String]
 })
 
-module.exports = postModel
+const Post = mongoose.model("Post", postSchema)
+
+module.exports = Post

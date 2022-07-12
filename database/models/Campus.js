@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('../index')
 
-const campusModel = new mongoose.Schema({
+const campusSchema = new mongoose.Schema({
     nome: String,
     sigla: String,
     endereco: {
@@ -19,7 +19,7 @@ const campusModel = new mongoose.Schema({
         depoimentos: [{
             autor: String,
             depoimento: String,
-            data: Date
+            data: { type: Date, default: Date.now }
         }]
     }],
     docentes: [{
@@ -29,7 +29,10 @@ const campusModel = new mongoose.Schema({
             local: String
         }],
         email: String
-    }]
+    }],
+    createdAt: { type: Date, default: Date.now }
 })
 
-module.exports = campusModel
+const Campus = mongoose.model("Campus", campusSchema)
+
+module.exports = Campus
