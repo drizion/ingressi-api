@@ -3,10 +3,11 @@ const mongoose = require('../index')
 const postSchema = new mongoose.Schema({
     titulo: String,
     conteudo: String,
+    capa: Buffer,
     autor: String,
-    data: { type: Date, default: Date.now },
+    mostrarPara: [String],
     ultimaEdicao: { type: Date, default: Date.now },
-    mostrarPara: [String]
+    createdAt: { type: Date, default: Date.now }
 })
 
 const Post = mongoose.model("Post", postSchema)

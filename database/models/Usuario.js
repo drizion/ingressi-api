@@ -12,23 +12,23 @@ const usuarioSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    senha: { 
+    password: { 
         type: String, 
         required: true,
         select: false
     },
-    aluno: {
-        anoIng: Number,
-        ano: Number,
+    estudante: {
+        anoTurma: Number,
+        anoEntrada: Number,
         turma: String
     },
     ingressante: {
         xp: Number,
-        missoes: {
-          pendentes: [{
+        missao: {
+          pendente: [{
               missaoId: String
           }],
-          concluidas: [{
+          concluida: [{
               missaoId: String
           }]
         }
@@ -40,8 +40,8 @@ const usuarioSchema = new mongoose.Schema({
 })
 
 usuarioSchema.pre('save', async function(next){
-    const hash = await bcrypt.hash(this.senha, 10);
-    this.senha = hash;
+    const hash = await bcrypt.hash(this.password, 10);
+    this.password = hash;
     next();
 })
 const Usuario = mongoose.model("Usuario", usuarioSchema)
