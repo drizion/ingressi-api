@@ -22,7 +22,7 @@ router.post('/register', async (req,res) => {
 router.post('/authenticate', async (req,res) => {
     const { email, password } = req.body;
     if(!password) return res.status(400).json({ error: "Password is required"})
-    // try {
+    try {
         const user = await Usuario.findOne({ email }).select('+password');
         if(!user) 
             return res.status(400).json({ error: "user not found" });
@@ -32,9 +32,10 @@ router.post('/authenticate', async (req,res) => {
         user.password = undefined
         return res.status(200).json({ user })
          
-    // } catch(err) {
-    //     return res.status(400).json({error: 'erro ao fazer login'});
-    // }
+    } catch(err) {
+        console.log(err)
+        return res.status(400).json({error: 'erro ao fazer login'});
+    }
 })
 
 module.exports = app => app.use('/auth', router);
