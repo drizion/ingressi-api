@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
         return res.status(200).json({ user, token: generateToken({ id: user._id }) });
     } catch (err) {
         console.log(err)
-        return res.status(400).json({ error: 'erro ao registrar' });
+        return res.status(400).json({ error: 'Error on register' });
     }
 })
 
@@ -35,7 +35,7 @@ router.post('/authenticate', async (req, res) => {
     try {
         const user = await Usuario.findOne({ email }).select('+password');
         if (!user)
-            return res.status(400).json({ error: "user not found" });
+            return res.status(400).json({ error: "User not found" });
 
         if (!await bcrypt.compare(password, user.password))
             return res.status(400).json({ error: "Invalid password" })
@@ -48,7 +48,7 @@ router.post('/authenticate', async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        return res.status(400).json({ error: 'erro ao fazer login' });
+        return res.status(400).json({ error: 'Error on login' });
     }
 })
 
