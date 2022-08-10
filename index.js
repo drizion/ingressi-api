@@ -4,7 +4,8 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-require('./database/controllers/authController')(app)
+require('./src/controllers/authController')(app)
+require('./src/controllers/userController')(app)
 
 app.get('/', (req,res) => {
     res.status(200).json({msg: 'ok'})

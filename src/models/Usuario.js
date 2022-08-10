@@ -8,36 +8,47 @@ const usuarioSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: { 
         type: String, 
         required: true,
         select: false
     },
-    estudante: {
+    userLevel: { 
+        type: String,
+        default: 'ingressante'
+    },
+    aluno: {
         anoTurma: Number,
         anoEntrada: Number,
         turma: String
     },
     ingressante: {
         xp: Number,
-        missao: {
-          pendente: [{
-              missaoId: String
-          }],
-          concluida: [{
-              missaoId: String
-          }]
-        }
+        missao: [{
+            titulo: String,
+            capa: Buffer,
+            valorXp: Number,
+            conteudo: String,
+            concluido: {
+                type: Boolean,
+                default: false
+            }
+        }]
     },
     admin: {
-        cpf: String
+        cpf: {
+            type: String,
+            select: false
+        }
     },
     createdAt: { type: Date, default: Date.now }
 })
