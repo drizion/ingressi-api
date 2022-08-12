@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
  
-mongoose.connect('mongodb://127.0.0.1:27017/ingressi');
+mongoose.connect('mongodb://127.0.0.1:27017/ingressi').then(
+    () => {
+        console.log('mongodb connected!')
+    }
+);
 mongoose.Promise = global.Promise;
 
 module.exports = mongoose
