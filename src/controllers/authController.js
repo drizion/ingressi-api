@@ -48,6 +48,26 @@ router.post('/authenticate', async (req, res) => {
     }
 })
 
+router.post('/deleteAccount', async (req, res) => {
+    const { username, password } = req.body;
+    if (!password) return res.status(400).json({ error: "Password is required" })
+    try {
+        const user = await Usuario.findOne({ username }).select('+password');
+        if (!user) return res.status(400).json({ error: "User not found" });
+        if (!await bcrypt.compare(password, user.password)) return res.status(400).json({ error: "Invalid password" })
+        user.password = undefined
+            const deleteUser = await Usuario.deleteOne({ username })
+            if(deleteUser.deletedCount == 1){
+                return res.status(200).json({ message: 'User deleted succesfuly' });
+            } else {
+                res.json({ error: 'Error on delete user'})
+            }
+    } catch (err) {
+        console.log(err)
+        return res.status(400).json({ error: 'Error on delete user' });
+    }
+})
+
 router.post('/resetPassword', async (req, res) => {
     const { id, newPassword } = req.body
     try {
