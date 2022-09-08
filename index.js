@@ -11,7 +11,7 @@ app.get('/', (req,res) => {
     res.status(200).json({msg: 'ok'})
 })
 
-const port = 6487
+const port = 1313
 app.listen(port, () => {
     console.log('server started at port '+ port)
 })
