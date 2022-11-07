@@ -5,17 +5,41 @@ import checkEmail from '../middlewares/checkEmail.js';
 import checkUsername from '../middlewares/checkUsername.js';
 import checkPassword from '../middlewares/checkPassword.js';
 import { generateToken, verifyToken } from '../middlewares/token.js';
+import * as fs from 'fs'
+import path from 'path';
+import multer from 'multer';
 
+const upload = multer({dest: 'uploads/'})
 const router = express.Router();
 
-router.post('/register', checkEmail, checkUsername, async (req, res) => {
+router.post('/register', upload.single('photo'), checkEmail, checkUsername, async (req, res) => {
     try {
-        const user = await User.create(req.body); // create user with encrypted password
+        var picture = {}
+        console.log(req.body)
+        if(req.file) {
+            picture = {
+                data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
+                mimetype: req.file.mimetype
+            }
+        }
+        const user = await User.create({
+            ...req.body,
+            picture,
+            gamification: [{
+                level: 1,
+                completedTasks: []
+            }]
+            
+        }); // create user with encrypted password
+        console.log(user)
         return res.status(200).json({
             status: 200,
             message: "Registrado com sucesso.",
             result: {
-                id: user._id,
+                id: user.id,
+                name: user.name,
+                picture: "http://178.255.219.100:1313/app/profilepicture/" + user.id,
+                gamification: user.gamification,
                 token: generateToken({ id: user._id })
             }
         })
@@ -29,29 +53,32 @@ router.post('/register', checkEmail, checkUsername, async (req, res) => {
     }
 })
 
+router.post('/profilepicture', upload.single('photo'), async (req, res) => {
+    console.log(req.file)
+    console.log(req.body)
+    res.status(200).json({status:true})
+    // const {id} = req.file
+    // try {
+    //     const user = await User.findOne({id})
+    //     const image = user.
+    //     res.writeHead(200, {'Content-Type': 'image/png'})
+    //     return res.end()
+    // } catch (e) {
+        
+    // }
+})
 
-router.post('/authenticate', checkPassword, verifyToken, async (req, res) => {
+router.post('/authenticate', verifyToken, checkPassword, async (req, res) => {
     try {
         const { user } = req
-        const idL = 1 // id do level (estou no level 1)
-        const maxL = 6 // numero maximo de leveis (estou no level 1 de 6)
-        const idM = 1 // id da missão (estou na missão 1 do level 1)
-        const maxM = 4 // numero maximo de missões (estou na missão 1 de 4 do level 1)
         return res.status(200).json({
             status: 200,
             message: "Ok",
             result: {
+                id: user.id,
                 name: user.name,
-                picture: "https://avatars.githubusercontent.com/u/84392895?s=100&v=4",
-                level: user.ingressante.level,
-                percent: parseInt(user.ingressante.level*100/maxL),
-                mission: {
-                    id: idM,
-                    max: maxM,
-                    percent: parseInt(idM*100/maxM),
-                    title: "Decisão de curso",
-                    thumbnail: "https://avatars.githubusercontent.com/u/84392895?s=500&v=4"
-                },
+                picture: "http://178.255.219.100:1313/app/profilepicture/" + user.id,
+                gamification: user.gamification,
                 token: generateToken({ id: user._id })
             }
         })

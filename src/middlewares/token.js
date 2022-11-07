@@ -12,17 +12,13 @@ export const generateToken = (params = {}) => {
 
 export const verifyToken = (req, res, next) => {
     try {
-        const { token, password } = req.body
-        if(password && !token) return next()
-        if(!token) return res.status(400).json({
-            status: 400,
-            message: "Não foi possível validar a sessão",
-            result: "error"
-        })
-        console.log(token)
-        console.log(secret)
-        if(req.user.id === jwt.verify(token, secret).id) {
-            next()
+        const { token, id } = req.body
+        if(!id || !token) return next()
+
+        if(id === jwt.verify(token, secret).id) {
+            console.log('token verificado')
+            req.ignorePassword = true
+            return next()
         } else {
             res.status(400).json({
                 status: 400,

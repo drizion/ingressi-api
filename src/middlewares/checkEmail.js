@@ -3,6 +3,8 @@ import User from '../database/models/User.js'
 
 export default async function checkEmail(req, res, next){
     const { email } = req.body
+    console.log(req.body)
+    console.log('middleware-checkemail');
     try {
         if(!email) return res.status(400).json({
             status: 400,

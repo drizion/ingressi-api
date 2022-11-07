@@ -1,6 +1,7 @@
 import User from '../database/models/User.js'
 
 export default async function checkUsername(req, res, next){
+    console.log('middleware checkusername')
     const { username } = req.body
     try {
         if(!username) return res.status(400).json({

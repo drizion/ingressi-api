@@ -27,27 +27,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'ingressante'
     },
-    aluno: {
-        anoTurma: Number,
-        anoEntrada: Number,
-        turma: String
+    picture: { 
+        data: Buffer,
+        mimetype: String 
     },
-    ingressante: {
+    gamification: [{
         level: {
-            type: Number,
-            default: 1
+            type: Number
         },
-        mission: [{
-            id: Number,
-            completed: Boolean
-        }]
-    },
-    admin: {
-        cpf: {
-            type: String,
-            select: false
-        }
-    },
+        completedTasks: []
+    }],
     createdAt: { type: Date, default: Date.now }
 })
 
