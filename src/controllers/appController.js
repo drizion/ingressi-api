@@ -1,16 +1,25 @@
 import express from 'express';
 import Post from '../database/models/Post.js';
 import User from '../database/models/User.js';
-
+import * as fs from 'fs'
 const router = express.Router();
 
 router.get('/profilepicture/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
-        res.writeHead(200,{
-            'Content-Type': user.picture.mimetype
-        })
-        res.end(user.picture.data)
+        if(user.picture.data) {
+            res.writeHead(200,{
+                'Content-Type': user.picture.mimetype
+            })
+            return res.end(user.picture.data)
+        } else {
+            console.log('sem foto')
+            const pic = fs.readFileSync('src/assets/sample-profile.png')
+            res.writeHead(200,{
+                'Content-Type': 'image/png'
+            })
+            res.end(pic)
+        }
     } catch (e) {
         res.json({error:e})
     }

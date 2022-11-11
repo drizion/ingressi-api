@@ -12,20 +12,19 @@ export const generateToken = (params = {}) => {
 
 export const verifyToken = (req, res, next) => {
     try {
-        const { token, id } = req.body
-        if(!id || !token) return next()
-
-        if(id === jwt.verify(token, secret).id) {
-            console.log('token verificado')
-            req.ignorePassword = true
-            return next()
-        } else {
-            res.status(400).json({
+        const { token } = req.body ? req.body : req.query
+        if(!token) return next()
+        jwt.verify(token, secret, function(err, decoded) {
+            if (err) return res.status(400).json({
                 status: 400,
                 message: "Ocorreu um erro ao validar a sessão",
                 result: "error"
             })
-        }
+            console.log('token verificado')
+            req.ignorePassword = true
+            req.userId = decoded.id;
+            return next()
+        });
     } catch (e) {
         console.log(e)
         res.status(400).json({
